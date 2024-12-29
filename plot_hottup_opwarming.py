@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 def plot_single_probe(df, probe = 1):
     # Plot 'Sensor 1' against 'Timestamp'
@@ -24,7 +25,6 @@ def plot_for_heating(df, volumme = 2):
 
     # temp_verschil_kachel          magenta
     # geschatte_vermogen            geel
-    
     df['dt'] = df['Sensor 3'] - df['Sensor 2']
     df["P_kachel"] = df["dt"]*4.2*volumme
     # Plot 'Sensor 1' against 'Timestamp'
@@ -38,7 +38,9 @@ def plot_for_heating(df, volumme = 2):
     plt.plot(df['Timestamp'], df['P_kachel'], linestyle='-', color='y')
     
     plt.legend(["T_buiten","T_water_in","T_water_uit","T_hottub","dT_kachel","Power"])
-    
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))  # Time only
+    plt.gca().xaxis.set_major_locator(mdates.MinuteLocator(interval=30))  # Interval of 30 minutes
+
     
     plt.ylim(0, 55)
     plt.grid(color='k', linestyle='-', linewidth=.5)
@@ -52,6 +54,7 @@ def plot_for_heating(df, volumme = 2):
     plt.xticks(rotation=45)
     plt.tight_layout()
 
+# i want to display the time and not the date in the plot, with a higher interval, so every half hour or so
 
 df = pd.read_csv('temp_logger\\logs\\temperature_log.csv')
 
